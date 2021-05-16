@@ -1,6 +1,6 @@
 {include file="head.tpl"}
 <form action="index.php" method="post">
-    <input type="hidden" name="action" value="addWorkerProcess">
+    <input type="hidden" name="action" value="addEmployeeProcess">
     <div class="mb-3">
       <label for="inputFirstName" class="form-label">Imię</label>
       <input type="text" name="inputFirstName" class="form-control" id="inputFirstName">

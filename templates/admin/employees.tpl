@@ -1,7 +1,7 @@
 {include file="head.tpl"}
     
 <div class="row">
-    <a class="col-lg-9" href="index.php?action=addWorker">
+    <a class="col-lg-9" href="index.php?action=addEmployee">
         <button class="btn btn-primary  m-3 w-25" type="submit">dodaj nowego pracownika</button>
     </a>
     <table class="table">
@@ -12,14 +12,14 @@
         <th>Stanowisko</th>
         <th></th>
     </tr>
-    {foreach from=$workers item=worker}
+    {foreach from=$employees item=employee}
         <tr>
-            <td>{$worker.id}</td>
-            <td>{$worker.firstName}</td>
-            <td>{$worker.lastName}</td>
-            <td>{$worker.occupation}</td>
+            <td>{$employee.id}</td>
+            <td>{$employee.firstName}</td>
+            <td>{$employee.lastName}</td>
+            <td>{$employee.occupation}</td>
             <td>
-            <a href="index.php?action=deleteWorker&worker_id={$worker.id}">
+            <a href="index.php?action=deleteEmployee&employee_id={$employee.id}">
                 
                 <button class="btn btn-danger" type="submit">usuń</button>
             </a>

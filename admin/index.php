@@ -41,16 +41,16 @@ if(isset($_REQUEST['action'])) {
             session_destroy();
             header('Location: index.php');
         break;
-        case 'workerList':
-            $query = $db->prepare("SELECT * FROM worker");
+        case 'employeeList':
+            $query = $db->prepare("SELECT * FROM employee");
             $query->execute();
             $result = $query->get_result();
-            $workers = array();
+            $employees = array();
             while($row = $result->fetch_assoc()) {
-                array_push($workers, $row);
+                array_push($employees, $row);
             }
-            $smarty->assign('workers', $workers);
-            $smarty->display('workers.tpl');
+            $smarty->assign('employees', $employees);
+            $smarty->display('employees.tpl');
         break;
         case 'animalList':
             $query = $db->prepare("SELECT * FROM animal");
@@ -70,37 +70,37 @@ if(isset($_REQUEST['action'])) {
             $smarty->display('animals.tpl');
         break;
         case 'generateWorkSchedule':
-            $query = $db->prepare("SELECT * FROM worker");
+            $query = $db->prepare("SELECT * FROM employee");
             $query->execute();
             $result = $query->get_result();
-            $workers = array();
+            $employees = array();
             while($row = $result->fetch_assoc()) {
-                array_push($workers, $row);
+                array_push($employees, $row);
             }
-            $smarty->assign('workers', $workers);
+            $smarty->assign('employees', $employees);
             $smarty->display('generateWorkSchedules.tpl');
            //dokończyć
         break;
         
-        case 'addWorkerProcess':
-            $query = $db->prepare("INSERT INTO worker (id, firstName, lastName, login, password, occupation) 
+        case 'addEmployeeProcess':
+            $query = $db->prepare("INSERT INTO employee (id, firstName, lastName, login, password, occupation) 
                                     VALUES (NULL, ?, ?, ?, ?, ?)");
             $passwordHash = password_hash($_REQUEST['password'], PASSWORD_ARGON2I);
             
             $query->bind_param("sssss", $_REQUEST['inputFirstName'], $_REQUEST['inputLastName'], $_REQUEST['login'], $passwordHash, $_REQUEST['occupation']);
             
             $result = $query->execute();
-            //var_dump($result);
-            header('Location: index.php?action=workerList');
+            
+            header('Location: index.php?action=employeeList');
         break;
-        case 'deleteWorker':
-            $query = $db->prepare("DELETE FROM worker WHERE id = ?");
-            $query->bind_param("i", $_REQUEST['worker_id']);
+        case 'deleteEmployee':
+            $query = $db->prepare("DELETE FROM employee WHERE id = ?");
+            $query->bind_param("i", $_REQUEST['employee_id']);
             $query->execute();
-            header('Location: index.php?action=workerList');
+            header('Location: index.php?action=employeeList');
         break;
-        case 'addWorker':
-            $smarty->display('addWorker.tpl');
+        case 'addEmployee':
+            $smarty->display('addEmployee.tpl');
         break;
          
         

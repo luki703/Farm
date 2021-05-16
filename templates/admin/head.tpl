@@ -31,7 +31,7 @@
                   </li>
                   {if isset($login)}
                 <li class="nav-item">
-                    <a class="nav-link" href="index.php?action=workerList">Pracownicy</a>
+                    <a class="nav-link" href="index.php?action=employeeList">Pracownicy</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="index.php?action=animalList">Zwierzęta hodowlane</a>
