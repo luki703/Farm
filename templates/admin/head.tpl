@@ -24,17 +24,30 @@
               <div class="collapse navbar-collapse" id="navbarText">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                   <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Strona główna</a>
+                    <a class="nav-link active" aria-current="page" href="index.php">Strona główna</a>
                   </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="#">Kontakt</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="#">zaloguj</a>
-                  </li>
-                </ul>
-              </div>
+                  {if isset($login)}
+                <li class="nav-item">
+                    <a class="nav-link" href="index.php?action=workerList">Pracownicy</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="index.php?action=animalList">Zwierzęta hodowlane</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="index.php?action=generateWorkSchedule">Generuj grafiki</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Witaj {$login}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="index.php?action=logout">Wyloguj</a>
+                </li>
+                {else}
+
+                {/if}
+            </ul>
             </div>
-          </nav>
+        </div>
+        </nav>
     
 
