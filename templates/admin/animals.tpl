@@ -2,7 +2,7 @@
     
 <div class="row">
     <a class="col-lg-9" href="index.php?action=addAnimal">
-        <button class="btn btn-primary  m-3 w-25" type="submit">dodaj nowe zwierze</button>
+        <button class="btn btn-primary  m-3 w-25" type="submit">+</button>
     </a>
     <table class="table">
     <tr>

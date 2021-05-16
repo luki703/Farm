@@ -2,7 +2,7 @@
     
 <div class="row">
     <a class="col-lg-9" href="index.php?action=addEmployee">
-        <button class="btn btn-primary  m-3 w-25" type="submit">dodaj nowego pracownika</button>
+        <button class="btn btn-primary  m-3 w-25" type="submit">+</button>
     </a>
     <table class="table">
     <tr>

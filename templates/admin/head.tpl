@@ -26,9 +26,7 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ">
-                  <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="index.php">Strona główna</a>
-                  </li>
+                  
                   {if isset($login)}
                 <li class="nav-item">
                     <a class="nav-link" href="index.php?action=employeeList">Pracownicy</a>
