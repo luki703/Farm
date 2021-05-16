@@ -1,6 +1,9 @@
 {include file="head.tpl"}
     
 <div class="row">
+    <a class="col-lg-9" href="index.php?action=addWorker">
+        <button class="btn btn-primary  m-3 w-25" type="submit">dodaj nowego pracownika</button>
+    </a>
     <table class="table">
     <tr>
         <th>ID</th>
@@ -25,7 +28,7 @@
         
     {/foreach}
     
-        <button class="btn btn-primary m-3 w-25" type="submit">dodaj nowego pracownika</button>
+        
     
     </table>    
 </div>

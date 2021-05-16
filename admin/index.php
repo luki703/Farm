@@ -81,19 +81,15 @@ if(isset($_REQUEST['action'])) {
             $smarty->display('generateWorkSchedules.tpl');
            //dokończyć
         break;
-        case 'processRegister':
+        
+        case 'addWorkerProcess':
             $query = $db->prepare("INSERT INTO worker (id,firstName, lastName, login, password, occupation ) 
-                                    VALUES (NULL, ?, ?, ?, ?,?)");
+                                    VALUES (NULL, ?, ?, ?, ?, ?)");
             $passwordHash = password_hash($_REQUEST['password'], PASSWORD_ARGON2I);
-            $query->bind_param("sssss", $_REQUEST['firstName'], $_REQUEST['lastName'], $_REQUEST['login'], $passwordHash, $_REQUEST['occupation']);
+            $query->bind_param("sssss", $_REQUEST['inputFirstName'], $_REQUEST['inputLastName'], $_REQUEST['login'], $passwordHash, $_REQUEST['occupation']);
             $query->execute();
-            if($query->errno == 1062) {
-                //próba rejestracji an ten sam pesel
-                $smarty->assign('error', "Istnieje już konto dla podanego numeru PESEL");
-                $smarty->display('register.tpl');
-            } else {
-                $smarty->display('workers.tpl');
-            }
+            $smarty->display('addWorker.tpl');
+                //header('Location: index.php?action=workerList');
         break;
         case 'deleteWorker':
             $query = $db->prepare("DELETE FROM worker WHERE id = ?");
@@ -101,6 +97,10 @@ if(isset($_REQUEST['action'])) {
             $query->execute();
             header('Location: index.php?action=workerList');
         break;
+        case 'addWorker':
+            $smarty->display('addWorker.tpl');
+        break;
+         
         
         default:
         $smarty->display('index.tpl');
