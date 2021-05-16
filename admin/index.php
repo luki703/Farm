@@ -83,13 +83,15 @@ if(isset($_REQUEST['action'])) {
         break;
         
         case 'addWorkerProcess':
-            $query = $db->prepare("INSERT INTO worker (id,firstName, lastName, login, password, occupation ) 
+            $query = $db->prepare("INSERT INTO worker (id, firstName, lastName, login, password, occupation) 
                                     VALUES (NULL, ?, ?, ?, ?, ?)");
             $passwordHash = password_hash($_REQUEST['password'], PASSWORD_ARGON2I);
+            
             $query->bind_param("sssss", $_REQUEST['inputFirstName'], $_REQUEST['inputLastName'], $_REQUEST['login'], $passwordHash, $_REQUEST['occupation']);
-            $query->execute();
-            $smarty->display('addWorker.tpl');
-                //header('Location: index.php?action=workerList');
+            
+            $result = $query->execute();
+            //var_dump($result);
+            header('Location: index.php?action=workerList');
         break;
         case 'deleteWorker':
             $query = $db->prepare("DELETE FROM worker WHERE id = ?");

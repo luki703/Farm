@@ -3,11 +3,11 @@
     <input type="hidden" name="action" value="addWorkerProcess">
     <div class="mb-3">
       <label for="inputFirstName" class="form-label">Imię</label>
-      <input type="text" name="InputFirstName" class="form-control" id="inputFirstName">
+      <input type="text" name="inputFirstName" class="form-control" id="inputFirstName">
     </div>
     <div class="mb-3">
       <label for="inputLastName" class="form-label">Nazwisko</label>
-      <input type="text" name="InputLastName" class="form-control" id="inputLastName">
+      <input type="text" name="inputLastName" class="form-control" id="inputLastName">
     </div>
     <div class="mb-3">
         <label for="login" class="form-label">Login</label>
