@@ -60,8 +60,7 @@ if(isset($_REQUEST['action'])) {
             
             while($row = $result->fetch_assoc()) {
                 
-                array_push($row);
-                var_dump($row);
+                
                 array_push($animals, $row);
 
                 
@@ -93,6 +92,16 @@ if(isset($_REQUEST['action'])) {
             
             header('Location: index.php?action=employeeList');
         break;
+        case 'addAnimalProcess':
+            $query = $db->prepare("INSERT INTO animal (id, name, weight, dateOfBirth) 
+                                    VALUES (NULL, ?, ?, ?)");
+            
+            $query->bind_param("sis", $_REQUEST['name'], $_REQUEST['weight'], $_REQUEST['dateOfBirth']);
+            
+            $result = $query->execute();
+            
+            header('Location: index.php?action=animalList');
+        break;
         case 'deleteEmployee':
             $query = $db->prepare("DELETE FROM employee WHERE id = ?");
             $query->bind_param("i", $_REQUEST['employee_id']);
@@ -101,6 +110,9 @@ if(isset($_REQUEST['action'])) {
         break;
         case 'addEmployee':
             $smarty->display('addEmployee.tpl');
+        break;
+        case 'addAnimal':
+            $smarty->display('addAnimal.tpl');
         break;
          
         

@@ -2,13 +2,13 @@
     
 <div class="row">
     <a class="col-lg-9" href="index.php?action=addAnimal">
-        <button class="btn btn-primary  m-3 w-25" type="submit">dodaj nowego pracownika</button>
+        <button class="btn btn-primary  m-3 w-25" type="submit">dodaj nowe zwierze</button>
     </a>
     <table class="table">
     <tr>
         <th>ID</th>
-        <th>Imię</th>
-        <th>Nazwisko</th>
+        <th>Typ</th>
+        <th>Waga</th>
         <th>Data narodzin</th>
         <th></th>
         
