@@ -20,8 +20,7 @@
     <div class="mb-3">
         <label for="dateOfBirth" class="form-label">Data narodzin</label>
         <input type="date" name="dateOfBirth" class="form-control" id="dateOfBirth">
-      </div>
-      
+    </div>
     
     <button type="submit" class="btn btn-primary">Submit</button>
   </form>
