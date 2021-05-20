@@ -79,24 +79,46 @@ if (isset($_REQUEST['action'])) {
         case 'generateScheduleProcess':
             $shiftStart = strtotime($_REQUEST['shiftStart']);
             $shiftEnd = strtotime($_REQUEST['shiftEnd']);
-            $shiftTimeStart = strtotime($_REQUEST['shiftTimeStart']);
-            $shiftTimeEnd = strtotime($_REQUEST['shiftTimeEnd']);
-            $schedules = array();
+            //$shiftTimeStart = strtotime($_REQUEST['shiftTimeStart']);
+            //$shiftTimeEnd = strtotime($_REQUEST['shiftTimeEnd']);
 
-            echo $_REQUEST['employee'];
+            //echo $_REQUEST['employee'];
             if ($shiftStart > $shiftEnd) {
                 echo '<script>alert("Błędne dane, prosze poprawić!")</script>';
             }
+            $datetime = new DateTime($_REQUEST['shiftEnd']);
+            $datetime->modify('+1 day');
 
-            $query = $db->prepare("INSERT INTO `workschedule`
+            $period = new DatePeriod(
+                new DateTime($_REQUEST['shiftStart']),
+                new DateInterval('P1D'),
+                new DateTime($datetime->format('Y-m-d'))
+            );
+            $days = array();
+            foreach ($period as $key => $value) {
+                $value->format('Y-m-d');
+                array_push($days, $value->format('Y-m-d')); 
+            }
+            
+            foreach ($days as $day) {
+                echo $day;
+                $query = $db->prepare("INSERT INTO `workschedule`
+                                    (`id`, `shiftStart`, 
+                                    `status`, `shiftTimeStart`, `shiftTimeEnd`, `employeeId`) 
+                VALUES (NULL, ?, 0, ?, ?, ?)");
+                $query->bind_param('sssi', $day,  $_REQUEST['shiftTimeStart'], $_REQUEST['shiftTimeEnd'],  $_REQUEST['employee']);
+                $query->execute();
+            }
+            header('Location: index.php?action=generateWorkSchedule');
+          /*  $query = $db->prepare("INSERT INTO `workschedule`
                                     (`id`, `shiftStart`, 
                                     `shiftEnd`, `shiftTimeStart`, `shiftTimeEnd`, `employeeId`) 
             VALUES (NULL, ?, ?, ?, ?, ?)");
             $query->bind_param('ssssi', $_REQUEST['shiftStart'], $_REQUEST['shiftEnd'], $_REQUEST['shiftTimeStart'], $_REQUEST['shiftTimeEnd'],  $_REQUEST['employee']);
 
-            $query->execute();
+            
 
-            header('Location: index.php?action=generateWorkSchedule');
+            */
 
             //dokończyć
             break;
@@ -124,7 +146,7 @@ if (isset($_REQUEST['action'])) {
             $smarty->assign('employee', $row);
 
             //Current employee's schedule
-            $query = $db->prepare("SELECT workschedule.shiftStart, workschedule.shiftEnd,
+            $query = $db->prepare("SELECT workschedule.shiftStart, workschedule.status,
                                           workschedule.shiftTimeStart, workschedule.shiftTimeEnd
                                    FROM workschedule
                                    INNER JOIN employee 

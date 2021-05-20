@@ -20,21 +20,26 @@
     </table>  
     <table class="table">
         <tr>
-            <th>Dni</th>
+            <th></th>
             <th></th>
             <th>Godziny</th>
             <th></th>
         </tr>
         <tr>
-            <th>Od</th>
-            <th>Do</th>
+            <th>Dzień</th>
+            <th>Status</th>
             <th>Od</th>
             <th>Do</th>
         </tr>
         {foreach from=$workschedules item=workschedule}
         <tr>
             <td>{$workschedule.shiftStart}</td>
-            <td>{$workschedule.shiftEnd}</td>
+            {if $workschedule.status==0}
+                <td>-</td>
+                {elseif $workschedule.status==1}
+                  <td>wolne</td>  
+            {/if}
+            
             <td>{$workschedule.shiftTimeStart}</td>
             <td>{$workschedule.shiftTimeEnd}</td>
             

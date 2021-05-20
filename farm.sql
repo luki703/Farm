@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Czas generowania: 18 Maj 2021, 23:20
+-- Czas generowania: 20 Maj 2021, 23:49
 -- Wersja serwera: 10.4.18-MariaDB
 -- Wersja PHP: 7.4.16
 
@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS `animal` (
   `weight` float NOT NULL,
   `dateOfBirth` date NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
 
 --
 -- Zrzut danych tabeli `animal`
@@ -63,7 +63,8 @@ CREATE TABLE IF NOT EXISTS `animal` (
 
 INSERT INTO `animal` (`id`, `name`, `weight`, `dateOfBirth`) VALUES
 (1, 'Krowa', 1000, '2019-05-01'),
-(2, 'Krowa', 890, '2021-05-06');
+(2, 'Krowa', 890, '2021-05-06'),
+(3, 'Świnia', 500, '1112-03-18');
 
 -- --------------------------------------------------------
 
@@ -98,22 +99,33 @@ INSERT INTO `employee` (`id`, `firstName`, `lastName`, `login`, `password`, `occ
 CREATE TABLE IF NOT EXISTS `workschedule` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `shiftStart` date NOT NULL,
-  `shiftEnd` date NOT NULL,
+  `status` text NOT NULL,
   `shiftTimeStart` time NOT NULL,
   `shiftTimeEnd` time NOT NULL,
   `employeeId` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `employeeId` (`employeeId`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4;
 
 --
 -- Zrzut danych tabeli `workschedule`
 --
 
-INSERT INTO `workschedule` (`id`, `shiftStart`, `shiftEnd`, `shiftTimeStart`, `shiftTimeEnd`, `employeeId`) VALUES
-(10, '2021-05-26', '2021-05-29', '02:57:00', '04:57:00', 11),
-(11, '2021-05-26', '2021-05-29', '02:57:00', '04:57:00', 11),
-(12, '2021-05-26', '2021-05-29', '02:57:00', '04:57:00', 11);
+INSERT INTO `workschedule` (`id`, `shiftStart`, `status`, `shiftTimeStart`, `shiftTimeEnd`, `employeeId`) VALUES
+(10, '2021-05-26', '0', '02:57:00', '04:57:00', 11),
+(11, '2021-05-26', '0', '02:57:00', '04:57:00', 11),
+(12, '2021-05-26', '1', '02:57:00', '04:57:00', 11),
+(16, '2021-05-24', '0', '08:00:00', '16:00:00', 11),
+(17, '2021-05-24', '0', '08:00:00', '16:00:00', 11),
+(18, '2021-05-24', '0', '08:00:00', '16:00:00', 11),
+(19, '2021-05-24', '0', '08:00:00', '16:00:00', 11),
+(20, '2021-05-24', '0', '08:00:00', '16:00:00', 11),
+(21, '2021-05-24', '0', '06:45:00', '16:45:00', 12),
+(22, '2021-05-25', '0', '06:45:00', '16:45:00', 12),
+(23, '2021-05-26', '0', '06:45:00', '16:45:00', 12),
+(24, '2021-05-27', '0', '06:45:00', '16:45:00', 12),
+(25, '2021-05-28', '0', '06:45:00', '16:45:00', 12),
+(26, '2021-06-06', '0', '02:43:00', '04:43:00', 11);
 
 --
 -- Ograniczenia dla zrzutów tabel
