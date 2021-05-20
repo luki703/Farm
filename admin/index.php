@@ -74,7 +74,7 @@ if (isset($_REQUEST['action'])) {
             }
             $smarty->assign('employees', $employees);
             $smarty->display('generateWorkSchedules.tpl');
-            
+
             break;
         case 'generateScheduleProcess':
             $shiftStart = strtotime($_REQUEST['shiftStart']);
@@ -82,24 +82,21 @@ if (isset($_REQUEST['action'])) {
             $shiftTimeStart = strtotime($_REQUEST['shiftTimeStart']);
             $shiftTimeEnd = strtotime($_REQUEST['shiftTimeEnd']);
             $schedules = array();
-            //var_dump($shiftEnd);
+
             echo $_REQUEST['employee'];
             if ($shiftStart > $shiftEnd) {
                 echo '<script>alert("Błędne dane, prosze poprawić!")</script>';
-                }
-                            
+            }
 
-            //dokończyć
             $query = $db->prepare("INSERT INTO `workschedule`
                                     (`id`, `shiftStart`, 
                                     `shiftEnd`, `shiftTimeStart`, `shiftTimeEnd`, `employeeId`) 
             VALUES (NULL, ?, ?, ?, ?, ?)");
-            var_dump($query);
-            $query->bind_param('ssssi',$_REQUEST['shiftStart'],$_REQUEST['shiftEnd'],$_REQUEST['shiftTimeStart'],$_REQUEST['shiftTimeEnd'],  $_REQUEST['employee'] );
-            
+            $query->bind_param('ssssi', $_REQUEST['shiftStart'], $_REQUEST['shiftEnd'], $_REQUEST['shiftTimeStart'], $_REQUEST['shiftTimeEnd'],  $_REQUEST['employee']);
+
             $query->execute();
-            var_dump($query);
-            //header('Location: index.php?action=generateWorkSchedule');
+
+            header('Location: index.php?action=generateWorkSchedule');
 
             //dokończyć
             break;
@@ -114,6 +111,36 @@ if (isset($_REQUEST['action'])) {
             $result = $query->execute();
 
             header('Location: index.php?action=employeeList');
+            break;
+        case 'showWorkSchedule':
+            //Current employee data
+            $query = $db->prepare("SELECT * FROM employee WHERE id =?");
+            $query->bind_param("i", $_REQUEST["employee_id"]);
+            $query->execute();
+
+            $result = $query->get_result();
+            $row = $result->fetch_assoc();
+            
+            $smarty->assign('employee', $row);
+
+            //Current employee's schedule
+            $query = $db->prepare("SELECT workschedule.shiftStart, workschedule.shiftEnd,
+                                          workschedule.shiftTimeStart, workschedule.shiftTimeEnd
+                                   FROM workschedule
+                                   INNER JOIN employee 
+                                   ON workschedule.employeeId=employee.id
+                                   WHERE employee.id=?;");
+            $query->bind_param("i", $_REQUEST["employee_id"]);
+            $query->execute();
+
+            $result = $query->get_result();
+            $workschedules = array();
+            while ($row = $result->fetch_assoc()) {
+                array_push($workschedules, $row);
+            }
+            $smarty->assign('workschedules', $workschedules);
+
+            $smarty->display('workSchedule.tpl');
             break;
         case 'addAnimalProcess':
             $query = $db->prepare("INSERT INTO animal (id, name, weight, dateOfBirth) 
