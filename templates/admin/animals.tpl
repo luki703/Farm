@@ -10,7 +10,7 @@
         <th>Typ</th>
         <th>Waga</th>
         <th>Data narodzin</th>
-        <th></th>
+        <th colspan="3"></th>
         
     </tr>
     {foreach from=$animals item=animal}
@@ -23,6 +23,18 @@
                 <a href="index.php?action=deleteAnimal&animal_id={$animal.id}">
                 
                 <button class="btn btn-danger" type="submit">usuń</button>
+            </a>
+            </td>
+            <td>
+                <a href="index.php?action=aboutAnimal&animal_id={$animal.id}">
+                
+                <button class="btn btn-info" type="submit">info</button>
+            </a>
+            </td>
+            <td>
+                <a href="index.php?action=aboutAnimal&animal_id={$animal.id}">
+                
+                <button class="btn btn-info" type="submit">weterynarz</button>
             </a>
             </td>
             </td>

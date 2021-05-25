@@ -16,7 +16,7 @@
     </div>
     
     <div class="mb-3">
-                {$smarty.now|date_format:'%Y-%m-%d'}
+                
               <label class="form-label" for="shiftStart">Początek zakresu zmiany</label>
               <input class="form-control" type="date" name="shiftStart" id="shiftStart" min="{$smarty.now|date_format:'%Y-%m-%d'}">
             </div>
@@ -33,7 +33,7 @@
               <input class="form-control" type="time"  name="shiftTimeEnd" id="shiftTimeEnd">  
         </div>
     
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" class="btn btn-primary">Dodaj</button>
   </form>
             </div>
         </main>

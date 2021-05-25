@@ -1,9 +1,5 @@
 {include file="head.tpl"}
     
-        <main class="row">
-            <div class="col">
-                index
-            </div>
-        </main>
+        index
 
 {include file="foot.tpl"}

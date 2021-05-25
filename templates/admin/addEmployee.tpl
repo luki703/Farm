@@ -22,6 +22,6 @@
         <input type="text" name="occupation" class="form-control" id="occupation">
       </div>
     
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" class="btn btn-primary">Dodaj</button>
   </form>
 {include file="foot.tpl"}

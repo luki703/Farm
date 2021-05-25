@@ -3,13 +3,12 @@ require_once('./../smarty/Smarty.class.php');
 session_start();
 $smarty = new Smarty();
 $db = new mysqli('localhost', 'root', '', 'farm');
+$animalId;
 
 $smarty->setTemplateDir('./../templates/admin');
 $smarty->setCompileDir('./../templates_c');
 $smarty->setCacheDir('./../cache');
 $smarty->setConfigDir('./../configs');
-
-//$smarty->display('index.tpl');
 
 if (isset($_SESSION['login']))
     $smarty->assign('login', $_SESSION['login']);
@@ -64,6 +63,36 @@ if (isset($_REQUEST['action'])) {
             $smarty->assign('animals', $animals);
             $smarty->display('animals.tpl');
             break;
+        case 'aboutAnimal':
+            //animal display
+            $query = $db->prepare("SELECT * FROM animal WHERE id=?");
+            $query->bind_param('i', $_REQUEST['animal_id']);
+            $query->execute();
+                       
+            $result = $query->get_result();
+            $row = $result->fetch_assoc();
+
+            $smarty->assign('animal', $row);
+            //notes display
+            $query = $db->prepare("SELECT n.id, n.title, n.content, n.createDate, n.employee_Id,
+                                          e.firstName, e.lastName, e.occupation
+                                   FROM animal AS a
+                                   INNER JOIN note AS n
+                                   ON a.id=n.animal_Id
+                                   LEFT JOIN employee AS e
+                                   ON e.id=n.employee_Id
+                                   WHERE a.id=?;");
+            $query->bind_param('i', $_REQUEST['animal_id']);
+            $query->execute();
+            $result = $query->get_result();
+            $notes = array();
+            while ($row = $result->fetch_assoc()) {
+                array_push($notes, $row);
+            }
+
+            $smarty->assign('notes', $notes);
+            $smarty->display('aboutAnimal.tpl');
+            break;
         case 'generateWorkSchedule':
             $query = $db->prepare("SELECT * FROM employee");
             $query->execute();
@@ -79,10 +108,7 @@ if (isset($_REQUEST['action'])) {
         case 'generateScheduleProcess':
             $shiftStart = strtotime($_REQUEST['shiftStart']);
             $shiftEnd = strtotime($_REQUEST['shiftEnd']);
-            //$shiftTimeStart = strtotime($_REQUEST['shiftTimeStart']);
-            //$shiftTimeEnd = strtotime($_REQUEST['shiftTimeEnd']);
 
-            //echo $_REQUEST['employee'];
             if ($shiftStart > $shiftEnd) {
                 echo '<script>alert("Błędne dane, prosze poprawić!")</script>';
             }
@@ -97,9 +123,9 @@ if (isset($_REQUEST['action'])) {
             $days = array();
             foreach ($period as $key => $value) {
                 $value->format('Y-m-d');
-                array_push($days, $value->format('Y-m-d')); 
+                array_push($days, $value->format('Y-m-d'));
             }
-            
+
             foreach ($days as $day) {
                 echo $day;
                 $query = $db->prepare("INSERT INTO `workschedule`
@@ -110,30 +136,10 @@ if (isset($_REQUEST['action'])) {
                 $query->execute();
             }
             header('Location: index.php?action=generateWorkSchedule');
-          /*  $query = $db->prepare("INSERT INTO `workschedule`
-                                    (`id`, `shiftStart`, 
-                                    `shiftEnd`, `shiftTimeStart`, `shiftTimeEnd`, `employeeId`) 
-            VALUES (NULL, ?, ?, ?, ?, ?)");
-            $query->bind_param('ssssi', $_REQUEST['shiftStart'], $_REQUEST['shiftEnd'], $_REQUEST['shiftTimeStart'], $_REQUEST['shiftTimeEnd'],  $_REQUEST['employee']);
 
-            
-
-            */
-
-            //dokończyć
             break;
 
-        case 'addEmployeeProcess':
-            $query = $db->prepare("INSERT INTO employee (id, firstName, lastName, login, password, occupation) 
-                                    VALUES (NULL, ?, ?, ?, ?, ?)");
-            $passwordHash = password_hash($_REQUEST['password'], PASSWORD_ARGON2I);
 
-            $query->bind_param("sssss", $_REQUEST['inputFirstName'], $_REQUEST['inputLastName'], $_REQUEST['login'], $passwordHash, $_REQUEST['occupation']);
-
-            $result = $query->execute();
-
-            header('Location: index.php?action=employeeList');
-            break;
         case 'showWorkSchedule':
             //Current employee data
             $query = $db->prepare("SELECT * FROM employee WHERE id =?");
@@ -142,7 +148,7 @@ if (isset($_REQUEST['action'])) {
 
             $result = $query->get_result();
             $row = $result->fetch_assoc();
-            
+
             $smarty->assign('employee', $row);
 
             //Current employee's schedule
@@ -164,6 +170,17 @@ if (isset($_REQUEST['action'])) {
 
             $smarty->display('workSchedule.tpl');
             break;
+        case 'addEmployeeProcess':
+            $query = $db->prepare("INSERT INTO employee (id, firstName, lastName, login, password, occupation) 
+                                        VALUES (NULL, ?, ?, ?, ?, ?)");
+            $passwordHash = password_hash($_REQUEST['password'], PASSWORD_ARGON2I);
+
+            $query->bind_param("sssss", $_REQUEST['inputFirstName'], $_REQUEST['inputLastName'], $_REQUEST['login'], $passwordHash, $_REQUEST['occupation']);
+
+            $result = $query->execute();
+
+            header('Location: index.php?action=employeeList');
+            break;
         case 'addAnimalProcess':
             $query = $db->prepare("INSERT INTO animal (id, name, weight, dateOfBirth) 
                                     VALUES (NULL, ?, ?, ?)");
@@ -174,11 +191,29 @@ if (isset($_REQUEST['action'])) {
 
             header('Location: index.php?action=animalList');
             break;
+        case 'addNoteProcess':
+            $query = $db->prepare("INSERT INTO note (id,employee_Id, animal_Id, title, 
+                                                    content, createDate) 
+                                        VALUES (NULL,0, ?, ?,?,NULL)");
+            var_dump($_REQUEST);
+            $query->bind_param("iss", $_REQUEST['animalId'],$_REQUEST['inputTitle'],
+                                $_REQUEST['inputContent']);
+            $query->execute();
+            
+
+           // header('Location: index.php?action=aboutAnimal');
+            break;
         case 'deleteEmployee':
             $query = $db->prepare("DELETE FROM employee WHERE id = ?");
             $query->bind_param("i", $_REQUEST['employee_id']);
             $query->execute();
             header('Location: index.php?action=employeeList');
+            break;
+        case 'deleteAnimal':
+            $query = $db->prepare("DELETE FROM animal WHERE id = ?");
+            $query->bind_param("i", $_REQUEST['animal_id']);
+            $query->execute();
+            header('Location: index.php?action=animalList');
             break;
         case 'addEmployee':
             $smarty->display('addEmployee.tpl');
@@ -186,6 +221,7 @@ if (isset($_REQUEST['action'])) {
         case 'addAnimal':
             $smarty->display('addAnimal.tpl');
             break;
+        
         default:
             $smarty->display('index.tpl');
     }
