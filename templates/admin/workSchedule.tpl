@@ -22,14 +22,15 @@
         <tr>
             <th></th>
             <th></th>
-            <th>Godziny</th>
-            <th></th>
+            <th colspan="4">Godziny</th>
+            
         </tr>
         <tr>
             <th>Dzień</th>
             <th>Status</th>
             <th>Od</th>
-            <th>Do</th>
+            <th colspan="3">Do</th>
+            
         </tr>
         {foreach from=$workschedules item=workschedule}
         <tr>
@@ -42,7 +43,17 @@
             
             <td>{$workschedule.shiftTimeStart}</td>
             <td>{$workschedule.shiftTimeEnd}</td>
-            
+            <td><!--modyfikacja-->
+            <a href="index.php?action=changeStatusWorkSchedule&workSchedule_id={$workschedule.id}">
+                <button class="btn btn-primary" type="submit">zmień status</button>
+            </a>
+            </td>
+            <td>
+            <a href="index.php?action=deleteWorkSchedule&workSchedule_id={$workschedule.id}">
+                <button class="btn btn-danger" type="submit">usuń</button>
+            </a>
+            </td>
+            <!--modyfikacja-->
         </tr>
         
         {/foreach}

@@ -63,12 +63,20 @@ if (isset($_REQUEST['action'])) {
             $smarty->assign('animals', $animals);
             $smarty->display('animals.tpl');
             break;
+        case 'deleteNote':
+            $query = $db->prepare("DELETE FROM note WHERE id = ?");
+            $query->bind_param("i", $_REQUEST['note_id']);
+            $query->execute();
+            
+            //$smarty->display('animal.tpl');
+            header('Location: index.php?action=animalList'); //&animalId
+            break;
         case 'aboutAnimal':
             //animal display
             $query = $db->prepare("SELECT * FROM animal WHERE id=?");
             $query->bind_param('i', $_REQUEST['animal_id']);
             $query->execute();
-                       
+
             $result = $query->get_result();
             $row = $result->fetch_assoc();
 
@@ -152,10 +160,11 @@ if (isset($_REQUEST['action'])) {
             $smarty->assign('employee', $row);
 
             //Current employee's schedule
-            $query = $db->prepare("SELECT workschedule.shiftStart, workschedule.status,
-                                          workschedule.shiftTimeStart, workschedule.shiftTimeEnd
+            $query = $db->prepare("SELECT workschedule.id, workschedule.shiftStart,
+                                          workschedule.shiftTimeStart, workschedule.shiftTimeEnd,
+                                          workschedule.status, workschedule.employeeId
                                    FROM workschedule
-                                   INNER JOIN employee 
+                                   LEFT JOIN employee 
                                    ON workschedule.employeeId=employee.id
                                    WHERE employee.id=?;");
             $query->bind_param("i", $_REQUEST["employee_id"]);
@@ -195,14 +204,33 @@ if (isset($_REQUEST['action'])) {
             $query = $db->prepare("INSERT INTO note (id,employee_Id, animal_Id, title, 
                                                     content, createDate) 
                                         VALUES (NULL,0, ?, ?,?,NULL)");
-            var_dump($_REQUEST);
-            $query->bind_param("iss", $_REQUEST['animalId'],$_REQUEST['inputTitle'],
-                                $_REQUEST['inputContent']);
-            $query->execute();
-            
 
-           // header('Location: index.php?action=aboutAnimal');
+            $query->bind_param(
+                "iss",
+                $_REQUEST['animalId'],
+                $_REQUEST['inputTitle'],
+                $_REQUEST['inputContent']
+            );
+            $query->execute();
+            //$animalId=$_REQUEST['animalId'];
+
+
+            header('Location: index.php?action=animalList');
             break;
+        case 'addVisitProcess':
+            $query = $db->prepare("INSERT INTO vetvisit (id, animal_Id, date, cause) 
+            VALUES (NULL,?, FROM_UNIXTIME(?), ?)");
+            
+            $day = strtotime($_REQUEST['inputDate']);
+            //echo $_REQUEST['inputCause'];
+            //var_dump($day);
+            $query->bind_param("iis", $_REQUEST['animalId'],$day,
+                             $_REQUEST['inputCause'] );
+                             //var_dump($_REQUEST);
+            $query->execute();             
+            header("Location: index.php?action=animalList");
+            
+        break;
         case 'deleteEmployee':
             $query = $db->prepare("DELETE FROM employee WHERE id = ?");
             $query->bind_param("i", $_REQUEST['employee_id']);
@@ -215,13 +243,85 @@ if (isset($_REQUEST['action'])) {
             $query->execute();
             header('Location: index.php?action=animalList');
             break;
+        case 'deleteWorkSchedule':
+            $query = $db->prepare("SELECT employeeId FROM workschedule WHERE id= ?");
+            $query->bind_param("i", $_REQUEST['workSchedule_id'] );
+            $query->execute();
+            $result = $query->get_result();
+            $row = $result->fetch_assoc();
+            $employee_Id = implode("",$row);
+
+            $query = $db->prepare("DELETE FROM workschedule WHERE id= ?");
+            $query->bind_param("i", $_REQUEST['workSchedule_id'] );
+            $query->execute();
+            
+            header('Location: index.php?action=showWorkSchedule&employee_id='.$employee_Id);
+           
+            break;
+        case 'changeStatusWorkSchedule':
+            $query = $db->prepare("SELECT employeeId, status FROM workschedule WHERE id= ?");
+            $query->bind_param("i", $_REQUEST['workSchedule_id'] );
+            $query->execute();
+            $result = $query->get_result();
+            $row = $result->fetch_assoc();
+            $chain = implode(",",$row);
+            //echo($chain);
+            $employee_Id = substr($chain, 0, 2);
+            $status = substr($chain, -1);
+            if ($status == 1) {
+                $status = 0;
+            }
+            else {
+                $status =1;
+            }
+            //echo($status);
+            
+            $query = $db->prepare("UPDATE workschedule SET status = ? WHERE id = ?");
+            $query->bind_param("ii",$status, $_REQUEST['workSchedule_id'] );
+            
+            $query->execute();
+           // var_dump($query);
+            
+            header('Location: index.php?action=showWorkSchedule&employee_id='.$employee_Id);
+           
+            break;
+
         case 'addEmployee':
             $smarty->display('addEmployee.tpl');
             break;
+        case 'vetVisitsList':
+            $query = $db->prepare("SELECT vet.id, vet.date, vet.cause,
+                                        vet.animal_Id, a.name, a.dateOfBirth, a.weight
+                                    FROM vetvisit AS vet
+                                    RIGHT JOIN animal AS a ON
+                                    vet.animal_Id = a.id
+                                    WHERE a.id=?");
+            $query->bind_param("i", $_REQUEST['animal_id']);
+            $query->execute();
+
+            $result = $query->get_result();
+            $visits = array();
+
+            while ($row = $result->fetch_assoc()) {
+
+                array_push($visits, $row);
+            }
+            $smarty->assign('animal_Id', $_REQUEST['animal_id']); // if there is no visit
+                                                                  // vet.animal_Id is null
+                $smarty->assign('visit', $visits);
+                $smarty->display('visits.tpl');
+            break;
+        case 'deleteVisit':
+            $query = $db->prepare("DELETE FROM vetvisit WHERE id = ?");
+            $query->bind_param("i", $_REQUEST['visit_id']);
+            $query->execute();
+            $animalId=$_REQUEST['animal_Id'];
+            header('Location: index.php?action=animalList');
+        break;
         case 'addAnimal':
             $smarty->display('addAnimal.tpl');
             break;
-        
+
         default:
             $smarty->display('index.tpl');
     }

@@ -33,44 +33,40 @@
     </div>
   </div>
   <div class="d-grid gap-2 d-md-flex justify-content-md-end">   
-        <button type="submit" class="btn btn-primary offset-lg-10">Zapisz</button>
+        <button type="submit" class="btn btn-success offset-lg-10">Zapisz</button>
   </div>
   
   
 </form>
 
 {if $notes != NULL}
-
+{foreach from=$notes item=note}
 <table class="table">
     <tr>
         <th>Tytuł</th>
         <th>Autor</th>
         <th>Data</th>
-
     </tr>
-    {foreach from=$notes item=note}
+    
     <tr>
-        <td>{$note.title}</td>
+        <th>{$note.title}</th>
         {if $note.employee_Id ==0}
             <td>ADMIN</td>
-            
-            {else}
-                <td>{$note.firstName} {$note.lastName}</td>
+        {else}
+            <td>{$note.firstName} {$note.lastName}</td>
         {/if}
         
         <td>{$note.createDate}</td>
     </tr>
     <tr>
-       <td colspan="3"> {$note.content}</td>
-    </tr>
-    <tr>
-        <td class="text-center" colspan="3">
+       <td colspan="2"> {$note.content}</td>
+       <td>
+       
             <a href="index.php?action=deleteNote&note_id={$note.id}">
-                <button class="btn btn-danger" type="submit">usuń</button>
+                <button class="btn btn-danger float-right" type="submit">usuń</button>
             </a>
         </td>
     </tr>
-    
     {/foreach}
     
 </table>

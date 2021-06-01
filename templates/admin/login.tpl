@@ -14,7 +14,7 @@
                     <input type="password" name="password" class="form-control" id="password" placeholder="" required>   
                 </div>
                 <div class="mb-3">
-                    <button type="submit" class="btn btn-primary w-100">Zaloguj</button>
+                    <button type="submit" class="btn btn-success w-100">Zaloguj</button>
                 </div>
                 {if isset($error)}
                 <div class="alert alert-danger" role="alert">

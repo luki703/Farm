@@ -33,7 +33,7 @@
               <input class="form-control" type="time"  name="shiftTimeEnd" id="shiftTimeEnd">  
         </div>
     
-    <button type="submit" class="btn btn-primary">Dodaj</button>
+    <button type="submit" class="btn btn-success">Dodaj</button>
   </form>
             </div>
         </main>

@@ -22,6 +22,6 @@
         <input type="date" name="dateOfBirth" class="form-control" id="dateOfBirth">
     </div>
     
-    <button type="submit" class="btn btn-primary">Dodaj</button>
+    <button type="submit" class="btn btn-success">Dodaj</button>
   </form>
 {include file="foot.tpl"}

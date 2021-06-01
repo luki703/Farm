@@ -17,10 +17,9 @@
 
 <body>
     <div class="container">
-
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        
+        <nav class="navbar navbar-expand-lg navbar-dark bg-success">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">Navbar</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
                 </button>
@@ -37,14 +36,17 @@
                 <li class="nav-item">
                     <a class="nav-link" href="index.php?action=generateWorkSchedule">Generuj grafiki</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Witaj {$login}</a>
+                
+                <li class="nav-item ">
+                    <a class="nav-link" >Witaj {$login}</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="index.php?action=logout">Wyloguj</a>
                 </li>
                 {else}
-
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Panel zarządzania</a>
+                </li>
                 {/if}
             </ul>
             </div>
