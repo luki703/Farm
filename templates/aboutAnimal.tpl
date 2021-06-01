@@ -60,12 +60,17 @@
     </tr>
     <tr>
        <td colspan="2"> {$note.content}</td>
+       {if $note.employee_Id == $UserID}
        <td>
-       
-            <a href="index.php?action=deleteNote&note_id={$note.id}">
+           <a href="index.php?action=deleteNote&note_id={$note.id}">
                 <button class="btn btn-danger float-right" type="submit">usuń</button>
             </a>
-        </td>
+            </td>
+       {/if}
+       
+       
+            
+        
     </tr>
     {/foreach}
     

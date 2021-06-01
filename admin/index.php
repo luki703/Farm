@@ -64,12 +64,19 @@ if (isset($_REQUEST['action'])) {
             $smarty->display('animals.tpl');
             break;
         case 'deleteNote':
+            $query = $db->prepare("SELECT animal_Id FROM note WHERE id =?");
+            $query->bind_param("i", $_REQUEST['note_id']);
+            $query->execute();
+            $result = $query->get_result();
+            $row = $result->fetch_assoc();
+            $animal_Id = implode("",$row);
+            var_dump($animal_Id);
+
             $query = $db->prepare("DELETE FROM note WHERE id = ?");
             $query->bind_param("i", $_REQUEST['note_id']);
             $query->execute();
             
-            //$smarty->display('animal.tpl');
-            header('Location: index.php?action=animalList'); //&animalId
+            header('Location: index.php?action=aboutAnimal&animal_id='.$animal_Id);
             break;
         case 'aboutAnimal':
             //animal display
@@ -212,10 +219,9 @@ if (isset($_REQUEST['action'])) {
                 $_REQUEST['inputContent']
             );
             $query->execute();
-            //$animalId=$_REQUEST['animalId'];
+            header('Location: index.php?action=aboutAnimal&animal_id='.$_REQUEST['animalId']);
 
 
-            header('Location: index.php?action=animalList');
             break;
         case 'addVisitProcess':
             $query = $db->prepare("INSERT INTO vetvisit (id, animal_Id, date, cause) 
@@ -228,7 +234,8 @@ if (isset($_REQUEST['action'])) {
                              $_REQUEST['inputCause'] );
                              //var_dump($_REQUEST);
             $query->execute();             
-            header("Location: index.php?action=animalList");
+            header("Location: index.php?action=vetVisitsList&animal_id=".$_REQUEST['animalId']);
+            
             
         break;
         case 'deleteEmployee':
@@ -315,8 +322,9 @@ if (isset($_REQUEST['action'])) {
             $query = $db->prepare("DELETE FROM vetvisit WHERE id = ?");
             $query->bind_param("i", $_REQUEST['visit_id']);
             $query->execute();
-            $animalId=$_REQUEST['animal_Id'];
-            header('Location: index.php?action=animalList');
+            
+            header("Location: index.php?action=vetVisitsList&animal_id=".$_REQUEST['animal_Id']);
+            
         break;
         case 'addAnimal':
             $smarty->display('addAnimal.tpl');
